@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const URL = process.env.MONGODB_URI;
 
 mongoose.connect(URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -13,7 +13,7 @@ mongoose.connect(URL, { useNewUrlParser: true, useUnifiedTopology: true, useFind
   })
 
 const PhoneSchema = new Schema({
-    name : {
+  name : {
         type:String,
         minlength:5,
         required:true
