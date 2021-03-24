@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PhoneSchema = new mongoose.Schema({
-  name : {
+    name : {
         type:String,
         minlength:5,
         required:true
