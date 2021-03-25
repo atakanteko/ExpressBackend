@@ -1,4 +1,5 @@
 const PhoneBook = require('../models/phonebook');
+const User = require('../models/user')
 
 const initialDatas = [
     {
@@ -10,6 +11,8 @@ const initialDatas = [
         phone:"0 555 624 8314"
     }
 ]
+
+
 
 const nonExistingId = async () => {
     const phone = new PhoneBook({ 'name': 'willremovethissoon', 'phone': '0 532 202 8310' })
@@ -24,6 +27,11 @@ const phonesInDb = async () => {
     return phones.map(phone => phone.toJSON())
   }
 
+  const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(u => u.toJSON())
+  }
+
   module.exports = {
-    initialDatas, nonExistingId, phonesInDb
+    initialDatas, nonExistingId, phonesInDb,usersInDb
   }

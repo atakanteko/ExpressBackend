@@ -1,5 +1,6 @@
 const phonebookRouter = require('express').Router()
 const PhoneBook = require('../models/phonebook');
+const User = require('../models/user')
 
 //! get all
 phonebookRouter.get('/',async (request,response) => {
@@ -33,7 +34,9 @@ phonebookRouter.get('/:id',(request,response,next) => {
 
 //! post the record by the user
 phonebookRouter.post('/', async (request,response,next) => {
+    console.log(request)
     const body = request.body
+
 
     if(!body.phone || !body.name){
         return response.status(400).json({
@@ -41,16 +44,24 @@ phonebookRouter.post('/', async (request,response,next) => {
         })
     }
     
+    const user = await User.findById(body.userId)
+    console.log("That user:", user)
+
     const person = new PhoneBook({
         name:body.name,
-        phone: body.phone
+        phone: body.phone,
+        user:user._id
     })
     try {
+        
         const result = await person.save()
-        const savedPersons = await result.toJSON()
-        response.status(200)
-        response.json(savedPersons)
-        response.end()
+        user.phonebooks = user.phonebooks.concat(result._id)
+        await user.save()
+        //const savedPersons = await result.toJSON()
+        
+        //response.status(200)
+        response.json(result)
+        //response.end()
     } catch (exception) {
         next(exception)
     }

@@ -10,6 +10,10 @@ const PhoneSchema = new mongoose.Schema({
         type:String,
         minlength:11,
         required:true
+    },
+    user:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User'
     }
 })
 
