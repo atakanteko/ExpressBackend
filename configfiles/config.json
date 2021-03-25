@@ -1,5 +1,0 @@
-{
-    "mongo":{
-        "MONGODB_URI":"mongodb+srv://atakan:hlTje0R6sqrBznXD@cluster0.k1pwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-    }
-}
