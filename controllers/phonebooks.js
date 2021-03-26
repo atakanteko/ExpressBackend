@@ -1,6 +1,16 @@
 const phonebookRouter = require('express').Router()
 const PhoneBook = require('../models/phonebook');
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+      return authorization.substring(7)
+    }
+    return null
+  }
+
 
 //! get all
 phonebookRouter.get('/',async (request,response) => {
@@ -35,9 +45,16 @@ phonebookRouter.get('/:id',(request,response,next) => {
 
 //! post the record by the user
 phonebookRouter.post('/', async (request,response,next) => {
-    console.log(request.body)
     const body = request.body
-
+    console.log("Adım 1:",request)
+    const token = getTokenFrom(request) //*Benim yazdığım en üstteki fonksiyona git
+    console.log("get Userdan dönen token",token)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    console.log("Adım 2 Decoded Token",decodedToken)
+    if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
 
     if(!body.phone || !body.name){
         return response.status(400).json({
@@ -45,7 +62,7 @@ phonebookRouter.post('/', async (request,response,next) => {
         })
     }
     
-    const user = await User.findById(body.userId)
+    //const user = await User.findById(body.userId)
     console.log("That user:", user)
 
     const person = new PhoneBook({
@@ -53,6 +70,7 @@ phonebookRouter.post('/', async (request,response,next) => {
         phone: body.phone,
         user:user._id
     })
+    
     console.log("That person:", person)
     try {
         
